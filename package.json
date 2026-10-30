@@ -1,0 +1,20 @@
+{
+  "name": "topic-pdf-generator",
+  "version": "1.2.0",
+  "private": true,
+  "description": "Topic-to-PDF generator with NVIDIA JSON Schema structured output, automatic recovery, Google Programmable Search research, unbranded PDF exports, and a minimal responsive PDF generator interface.",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "check": "node --check server.js && node --check public/app.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "pdfkit": "^0.16.0"
+  }
+}

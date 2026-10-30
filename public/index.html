@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#ffffff">
+  <title>Create a PDF</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/runtime-config.js"></script>
+  <script>
+    // Google Programmable Search callback used silently for optional research.
+    window.__pdfStudioGoogleLatest = { query: '', sources: [] };
+    window.__pdfStudioGooglePending = null;
+    function pdfStudioPlainSearchText(value) {
+      return String(value || '')
+        .replace(/<[^>]*>/g, ' ')
+        .replace(/&nbsp;/gi, ' ')
+        .replace(/&amp;/gi, '&')
+        .replace(/&quot;/gi, '"')
+        .replace(/&#39;|&apos;/gi, "'")
+        .replace(/&lt;/gi, '<')
+        .replace(/&gt;/gi, '>')
+        .replace(/\s+/g, ' ')
+        .trim();
+    }
+    window.__gcse = {
+      initializationCallback: function () {
+        window.__pdfStudioGoogleInitialized = true;
+        window.dispatchEvent(new CustomEvent('pdfstudio:google-ready'));
+      },
+      searchCallbacks: {
+        web: {
+          ready: function (gname, query, promos, results) {
+            if (gname !== 'pdfresearch') return false;
+            var sources = (Array.isArray(results) ? results : []).slice(0, 12).map(function (result) {
+              return {
+                title: pdfStudioPlainSearchText(result.titleNoFormatting || result.title || ''),
+                url: String(result.url || ''),
+                content: pdfStudioPlainSearchText(result.contentNoFormatting || result.content || result.titleNoFormatting || result.title || '')
+              };
+            }).filter(function (item) { return item.title && /^https?:\/\//i.test(item.url); });
+            window.__pdfStudioGoogleLatest = { query: String(query || ''), sources: sources };
+            window.dispatchEvent(new CustomEvent('pdfstudio:google-results', { detail: window.__pdfStudioGoogleLatest }));
+            var pending = window.__pdfStudioGooglePending;
+            var normalizeQuery = function (value) { return String(value || '').replace(/\s+/g, ' ').trim().toLowerCase(); };
+            if (pending && normalizeQuery(query) === normalizeQuery(pending.query)) {
+              clearTimeout(pending.timer);
+              window.__pdfStudioGooglePending = null;
+              pending.resolve({ sources: sources, status: sources.length ? 'ok' : 'empty' });
+            }
+            return false;
+          }
+        }
+      }
+    };
+  </script>
+  <script>
+    (function loadGooglePse() {
+      var cx = window.PDF_STUDIO_CONFIG && window.PDF_STUDIO_CONFIG.googleCseId;
+      if (!cx) return;
+      var script = document.createElement('script');
+      script.async = true;
+      script.src = 'https://cse.google.com/cse.js?cx=' + encodeURIComponent(cx);
+      script.onerror = function () {
+        window.__pdfStudioGoogleLoadFailed = true;
+        window.dispatchEvent(new CustomEvent('pdfstudio:google-load-error'));
+      };
+      document.head.appendChild(script);
+    })();
+  </script>
+</head>
+<body>
+  <main class="page">
+    <header class="page-header">
+      <span class="eyebrow">PDF GENERATOR</span>
+      <h1>Create a PDF</h1>
+    </header>
+
+    <form id="generatorForm" class="generator-form">
+      <div class="topic-field">
+        <label for="topic">What should the document cover?</label>
+        <textarea id="topic" name="topic" rows="5" maxlength="500" placeholder="Enter a topic or describe what you need…" required></textarea>
+        <div class="field-meta"><span>Be specific for a more useful result.</span><span id="topicCount">0 / 500</span></div>
+      </div>
+
+      <details class="options">
+        <summary>Document options</summary>
+        <div class="options-grid">
+          <div class="field">
+            <label for="documentType">Type</label>
+            <select id="documentType" name="documentType">
+              <option>Professional guide</option>
+              <option>Research report</option>
+              <option>Study guide</option>
+              <option>Technical explainer</option>
+              <option>Business report</option>
+              <option>Long-form ebook</option>
+              <option>Lesson / training material</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="length">Length</label>
+            <select id="length" name="length">
+              <option value="brief">Brief · 4–6 pages</option>
+              <option value="standard" selected>Standard · 8–10 pages</option>
+              <option value="detailed">Detailed · 12–15 pages</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="audience">Audience</label>
+            <select id="audience" name="audience">
+              <option>General readers</option>
+              <option>Students</option>
+              <option>Researchers / academics</option>
+              <option>Business professionals</option>
+              <option>Technical experts</option>
+              <option>Beginners</option>
+              <option>Executives</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="tone">Writing style</label>
+            <select id="tone" name="tone">
+              <option>Professional and clear</option>
+              <option>Academic and analytical</option>
+              <option>Beginner-friendly</option>
+              <option>Persuasive and engaging</option>
+              <option>Concise and practical</option>
+              <option>In-depth and technical</option>
+            </select>
+          </div>
+        </div>
+        <label class="research-option" for="includeResearch">
+          <span><strong>Live web research</strong><small>Find current sources and add references.</small></span>
+          <input type="checkbox" id="includeResearch" checked>
+        </label>
+      </details>
+
+      <button class="generate-button" id="generateButton" type="submit">
+        <span id="buttonText">Generate PDF</span>
+        <span aria-hidden="true">→</span>
+      </button>
+    </form>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <div class="google-search-engine" aria-hidden="true"><div class="gcse-search" data-gname="pdfresearch" data-resultSetSize="large" data-safeSearch="active"></div></div>
+  <div class="working-overlay" id="workingOverlay" aria-hidden="true">
+    <div class="working-card">
+      <span class="loader-ring" aria-hidden="true"></span>
+      <h2 id="workingTitle">Creating your PDF</h2>
+      <p id="workingMessage">Writing and formatting your document.</p>
+    </div>
+  </div>
+  <script src="/app.js" defer></script>
+</body>
+</html>
