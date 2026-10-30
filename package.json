@@ -1,8 +1,8 @@
 {
-  "name": "topic-pdf-generator",
-  "version": "1.2.0",
+  "name": "ai-junta-pdf-generator",
+  "version": "1.2.1",
   "private": true,
-  "description": "Topic-to-PDF generator with NVIDIA JSON Schema structured output, automatic recovery, Google Programmable Search research, unbranded PDF exports, and a minimal responsive PDF generator interface.",
+  "description": "AI Junta topic-to-PDF generator with Google research and minimal interface.",
   "type": "commonjs",
   "scripts": {
     "start": "node server.js",

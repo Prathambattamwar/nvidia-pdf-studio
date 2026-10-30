@@ -123,7 +123,7 @@ form.addEventListener('submit', async (event) => {
     });
     if (!response.ok) {
       let message = `Generation failed (HTTP ${response.status}).`;
-      try { const data = await response.json(); message = data.error || message; } catch {}
+      try { const data = await response.json(); message = (data.error || message).replace(/NVIDIA/gi, 'AI Junta').replace(/Nemotron/gi, 'AI Junta AI'); } catch {}
       throw new Error(message);
     }
     setWorking(true, 'format');
@@ -148,7 +148,10 @@ form.addEventListener('submit', async (event) => {
       showToast(`${title} has been generated and downloaded.`, false);
     }
   } catch (error) {
-    showToast(error.message || 'Something went wrong. Please try again.', true);
+    const userMessage = String(error.message || 'Something went wrong. Please try again.')
+      .replace(/NVIDIA/gi, 'AI Junta')
+      .replace(/Nemotron/gi, 'AI Junta AI');
+    showToast(userMessage, true);
   } finally {
     setWorking(false);
   }
